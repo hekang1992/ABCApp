@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To confirm the legitimacy of your identity document and enhance fraud prevention measures, we kindly request access to your photo library. Granting us permission will enable us to securely retrieve an electronic copy of your identity document from your album. Rest assured, your personal information will be safeguarded and utilized solely for essential identity verification purposes</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>OleoScript-Bold.ttf</string>
+		<string>OleoScript-Regular.ttf</string>
+	</array>
+</dict>
+</plist>
