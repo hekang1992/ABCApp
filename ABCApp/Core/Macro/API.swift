@@ -20,7 +20,7 @@ import UIKit
 //    }
 //}
 
-let ApiPrefix = "https://www.wonder5lend.com"
+let ApiPrefix = "https://www.fdfdasfdasfd.com"
 let BaseApi = ApiPrefix + "/ash/"
 
 let postuprightFingers = "uprightFingers" // 获取验证码

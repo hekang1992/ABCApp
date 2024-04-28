@@ -270,7 +270,6 @@ extension AppDelegate {
             let firLaunchKeyStr = AppClassUtilsHelper.getDefaultStrWith(key: firLaunchKey)
             if (firLaunchKeyStr != "1"){
                 AppClassUtilsHelper.saveUserDefault(value: "1", key: firLaunchKey)
-                
                 let navi = self?.rootTabBarVC.children.first as! BaseNC
                 let homeVC = navi.children.first as! HomeVC
                 homeVC.getAppHomeBigDataAction()
@@ -279,8 +278,6 @@ extension AppDelegate {
             self?.requestGit()
         }
     }
-        
-    
     
     func requestGit() {
         DispatchQueue.global(qos: .default).async {

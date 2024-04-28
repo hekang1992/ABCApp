@@ -120,6 +120,8 @@ class AppAFNetManager: NSObject {
                     AppClassUtilsHelper.makeTopHudidAction(str: respModel?.supply ?? "")
                     fail(respModel ?? AppRespModel())
                 }
+            }else {
+                fail(AppRespModel())
             }
         }
         
