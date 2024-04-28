@@ -17,3 +17,9 @@ class AppRespModel: HandyJSON {
     var marched: String?
     var mcneil: Any?
 }
+
+class GitModel: HandyJSON {
+    required init() {
+    }
+    
+}

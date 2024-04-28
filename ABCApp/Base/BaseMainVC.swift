@@ -148,7 +148,7 @@ class BaseMainVC: BaseVC {
         if (self.tabBarController?.selectedIndex == 1){
             makeAnimation(aView: vc.left2View)
         }else if (self.tabBarController?.selectedIndex == 2){
-            makeAnimation(aView: vc.left3View)
+//            makeAnimation(aView: vc.left3View)
         }else if (self.tabBarController?.selectedIndex == 3){
             makeAnimation(aView: vc.left4View)
         }else if (self.tabBarController?.selectedIndex == 0){

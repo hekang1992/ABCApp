@@ -11,7 +11,7 @@ import StoreKit
 import SVProgressHUD
 import HandyJSON
 
-class AppWebViewVC: BaseVC, WKScriptMessageHandler {
+class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
 
     var urlStr: String = ""
     var isScree: Int?

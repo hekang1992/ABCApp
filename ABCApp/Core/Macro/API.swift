@@ -10,7 +10,6 @@ import UIKit
 let ApiPrefix = "https://www.wonder5lend.com"
 let BaseApi = ApiPrefix + "/ash/"
 
-
 let postuprightFingers = "uprightFingers" // 获取验证码
 let postthoughtEveryone = "thoughtEveryone" // 登录
 let getartifactsCondensed = "artifactsCondensed" // 首页

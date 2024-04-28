@@ -24,7 +24,14 @@ public let alamofireManager: Session = {
 public func request(_ method: HTTPMethod, _ urlStr: String, _ parameters: Parameters? = nil, _ encoding: ParameterEncoding = URLEncoding(), _ headers: [String: String]? = nil, _ timeOutDruation: Int = 15) -> DataRequest {
     let fullParameters = parameters ?? [:]
     let fullHeaders = headers ?? [:]
-    let urlConStr = BaseApi + urlStr + "?" + AppAFNetManager.getPublicParamsAction()
+    var baseApiUrl = UserDefaults.standard.object(forKey: APIBAERURL) as? String ?? ""
+    if baseApiUrl.isEmpty {
+        baseApiUrl = BaseApi
+    }else {
+        UserDefaults.standard.set(baseApiUrl, forKey: APIBAERURL)
+        UserDefaults.standard.synchronize()
+    }
+    let urlConStr = baseApiUrl + urlStr + "?" + AppAFNetManager.getPublicParamsAction()
     print(urlConStr)
     print(fullParameters)
     let url: URL = URL(string: urlConStr)!
@@ -38,7 +45,14 @@ public func request(_ method: HTTPMethod, _ urlStr: String, _ parameters: Parame
 public func requestFormData(_ method: HTTPMethod, _ urlStr: String, _ image: UIImage,  _ parameters: Parameters? = nil, _ encoding: ParameterEncoding = URLEncoding(), _ headers: [String: String]? = nil) -> UploadRequest {
     let fullParameters = parameters ?? [:]
     let fullHeaders = headers ?? [:]
-    let urlConStr = BaseApi + urlStr + "?" + AppAFNetManager.getPublicParamsAction()
+    var baseApiUrl = UserDefaults.standard.object(forKey: APIBAERURL) as? String ?? ""
+    if baseApiUrl.isEmpty {
+        baseApiUrl = BaseApi
+    }else {
+        UserDefaults.standard.set(baseApiUrl, forKey: APIBAERURL)
+        UserDefaults.standard.synchronize()
+    }
+    let urlConStr = baseApiUrl + urlStr + "?" + AppAFNetManager.getPublicParamsAction()
     let url: URL = URL(string: urlConStr)!
 
     return alamofireManager.upload(multipartFormData: { data in

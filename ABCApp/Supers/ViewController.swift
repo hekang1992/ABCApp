@@ -21,7 +21,7 @@ class ViewController: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        var webVC = AppWebViewVC()
+        let webVC = AppWebViewVC()
         webVC.urlStr = "http://147.139.168.226:8093/test?url=https://www.baidu.com&emaill=757712617@qq.com"
         self.navigationController?.pushViewController(webVC, animated: true);
         

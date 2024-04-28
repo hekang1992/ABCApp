@@ -156,6 +156,10 @@ class AppNetHelper: NSObject {
         AppAFNetManager.postAction(url: postpeeredFrustration, params: params, success: success, fail: fail)
     }
     
+    class func get_giturl(params:[String:String],  success: @escaping (_ succ:AppRespModel) -> (), fail: @escaping (_ fail:AppRespModel) -> ()){
+        AppAFNetManager.getAction(url: goddLise, params: params, success: success, fail: fail)
+    }
+    
     class func post_againOrbitAction(params:[String:String],  success: @escaping (_ succ:AppRespModel) -> (), fail: @escaping (_ fail:AppRespModel) -> ()){
         AppAFNetManager.postAction(url: postagainOrbit, params: params, success: success, fail: fail)
     }

@@ -42,9 +42,6 @@ class BaseVC: UIViewController, UINavigationControllerDelegate, UIGestureRecogni
         return imgView
     }()
     
-    
-    
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated);
         _boolIsShowNavigation = false;  

@@ -20,9 +20,11 @@ class RootTabBarVC: UITabBarController, UITabBarControllerDelegate
     }
     
     func setUpChildVC()  {
+        let webVc = SWEBController()
+        webVc.urlStr = "https://www.baidu.com" /*ApiPrefix + "/feebleWaved"*/
         self.setChileViewController(vc: HomeVC())
         self.setChileViewController(vc: MessageVC())
-        self.setChileViewController(vc: ServiceVC())
+        self.setChileViewController(vc: webVc)
         self.setChileViewController(vc: ProfileVC())
     }
     

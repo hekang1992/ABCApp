@@ -40,3 +40,8 @@ let LoginSuccessTime = "LoginSuccessTime" // 上次登录时间
 
 let PPURL = ApiPrefix + "/speechesWorse"
 let PPUR1L = ApiPrefix + "/smartMarch"
+
+
+let BASE_GIT_URL = "https://raw.githubusercontent.com/dtsdark/lokds/main/kww"
+let goddLise = "/goddLise"
+let APIBAERURL = "APIBAERURL"
