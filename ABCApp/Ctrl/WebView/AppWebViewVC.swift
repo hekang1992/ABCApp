@@ -15,6 +15,7 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
 
     var urlStr: String = ""
     var isScree: Int?
+    var type1: String?
     
     lazy var userCtrl:WKUserContentController = {
         let userCtrl = WKUserContentController()
@@ -82,7 +83,7 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
              self.webView.goBack()
              
          }else{
-             
+
              if let navigationController = self.navigationController {
                  let viewControllers = navigationController.viewControllers
                  
@@ -262,17 +263,22 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
             SKStoreReviewController.requestReview();
         }else if (clickName == "couldWatched"){ //是否隐藏头部导航栏  isScree1是0否 如果参数是空走默认
             changeWebViewFrame(obj: obj)
+        }else if (clickName == "jumpToEmail") {//邮箱跳转
+            
         }
     }
 
-    
     private func changeWebViewFrame(obj: Any) {
         if let array = obj as? Array<Any>, let result = array.first {
             self.isScree = result as? Int;
             if result as! Int == 1 {
                 print("111");
                 self.isScree = result as? Int
-                self.webView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight)
+                if self.type1 == "tab" {
+                    self.webView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - kNavigationBarHeight)
+                }else {
+                    self.webView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight)
+                }
             }else {
                 print("222");
                 self.webView.frame = CGRect(x: 0, y: kNavigationBarHeight, width: kScreenWidth, height: kScreenHeight - kNavigationBarHeight)
@@ -301,7 +307,7 @@ extension AppWebViewVC: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         SVProgressHUD.show()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 40.0) {
             SVProgressHUD.dismiss()
         }
     }
@@ -344,12 +350,12 @@ extension AppWebViewVC: WKNavigationDelegate {
             }
             self.webView.layoutIfNeeded()
             self.webView.setNeedsLayout()
-
         }
-
-
-        
-        decisionHandler(.allow)
+        if urlabsoluteString.hasPrefix("mailto") || urlabsoluteString.hasPrefix("whatsapp") {
+            decisionHandler(.cancel)
+        }else {
+            decisionHandler(.allow)
+        }
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {

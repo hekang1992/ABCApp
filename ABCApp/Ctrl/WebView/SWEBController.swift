@@ -13,7 +13,7 @@ class SWEBController: AppWebViewVC {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.webView.frame = CGRectMake(0, -kNavigationBarHeight, kScreenWidth, kScreenHeight)
+        self.webView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight - kNavigationBarHeight)
         self.baseBackBtn.isHidden = true
     }
     
