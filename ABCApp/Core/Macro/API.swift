@@ -20,7 +20,7 @@ import UIKit
 //    }
 //}
 
-let ApiPrefix = "https://www.fdfdasfdasfd.com"
+let ApiPrefix = "https://www.wonder5lend.com"
 let BaseApi = ApiPrefix + "/ash/"
 
 let postuprightFingers = "uprightFingers" // 获取验证码
@@ -62,8 +62,8 @@ let getthroughMistaken = "throughMistaken"
 let getThinkBooks = "thinkBooks" // 获取客服电话
 let getuidByOpes = "uidByOpes"
 
-let querIsWo = "/querIsWo"
-let wirldWid = "/wirldWid"
-let worldSole = "/worldSole"
-let blueBlue = "/blueBlue"
+let querIsWo = "querIsWo"
+let wirldWid = "wirldWid"
+let worldSole = "worldSole"
+let blueBlue = "blueBlue"
 

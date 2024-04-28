@@ -321,12 +321,14 @@ extension AppDelegate {
                 self?.idfaTrackingAuthorizationStatus()
                 // todo 有网刷新首页
                 let firLaunchKeyStr = AppClassUtilsHelper.getDefaultStrWith(key: firLaunchKey)
-                if (firLaunchKeyStr != "1"){
-                    AppClassUtilsHelper.saveUserDefault(value: "1", key: firLaunchKey)
+//                if (firLaunchKeyStr != "1"){
+//                    AppClassUtilsHelper.saveUserDefault(value: "1", key: firLaunchKey)
                     let navi = self?.rootTabBarVC.children.first as! BaseNC
                     let homeVC = navi.children.first as! HomeVC
-                    homeVC.getAppHomeBigDataAction()
-                }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        homeVC.getAppHomeBigDataAction()
+                    }
+//                }
             } fail: { [weak self] fail in
                 self?.isGit = false
                 self?.netarrayApi(goddLise, index: index + 1)
