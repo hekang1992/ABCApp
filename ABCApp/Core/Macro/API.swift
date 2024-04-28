@@ -7,6 +7,19 @@
 
 import UIKit
 
+//class abc {
+//    var baseApiUrl: String
+//    init() {
+//        if let url = UserDefaults.standard.object(forKey: APIBAERURL) as? String, !url.isEmpty {
+//            baseApiUrl = url
+//        } else {
+//            baseApiUrl = BaseApi
+//            UserDefaults.standard.set(baseApiUrl, forKey: APIBAERURL)
+//            UserDefaults.standard.synchronize()
+//        }
+//    }
+//}
+
 let ApiPrefix = "https://www.wonder5lend.com"
 let BaseApi = ApiPrefix + "/ash/"
 

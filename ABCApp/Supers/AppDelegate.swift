@@ -91,7 +91,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     print("网络>>>>>>>>Connected via Cellular")
                 }
                 
-                self?.requestGit()
+                self?.testApi()
             
                 // 停止网络监控
                 reachabilityManager?.stopListening()
@@ -261,6 +261,27 @@ extension AppDelegate : UNUserNotificationCenterDelegate{
 
 extension AppDelegate {
     
+    func testApi() {
+        let dict = ["unopposed":"1"]
+        AppNetHelper.get_giturl(params: dict) { [weak self] succ in
+            self?.configPushAction()
+            self?.idfaTrackingAuthorizationStatus()
+            // todo 有网刷新首页
+            let firLaunchKeyStr = AppClassUtilsHelper.getDefaultStrWith(key: firLaunchKey)
+            if (firLaunchKeyStr != "1"){
+                AppClassUtilsHelper.saveUserDefault(value: "1", key: firLaunchKey)
+                
+                let navi = self?.rootTabBarVC.children.first as! BaseNC
+                let homeVC = navi.children.first as! HomeVC
+                homeVC.getAppHomeBigDataAction()
+            }
+        } fail: { [weak self] fail in
+            self?.requestGit()
+        }
+    }
+        
+    
+    
     func requestGit() {
         DispatchQueue.global(qos: .default).async {
             let originalURLString = BASE_GIT_URL
@@ -300,14 +321,11 @@ extension AppDelegate {
             AppNetHelper.get_giturl(params: dict) { [weak self] succ in
                 self?.isGit = true
                 self?.configPushAction()
-                
                 self?.idfaTrackingAuthorizationStatus()
-                
                 // todo 有网刷新首页
                 let firLaunchKeyStr = AppClassUtilsHelper.getDefaultStrWith(key: firLaunchKey)
                 if (firLaunchKeyStr != "1"){
                     AppClassUtilsHelper.saveUserDefault(value: "1", key: firLaunchKey)
-                    
                     let navi = self?.rootTabBarVC.children.first as! BaseNC
                     let homeVC = navi.children.first as! HomeVC
                     homeVC.getAppHomeBigDataAction()
