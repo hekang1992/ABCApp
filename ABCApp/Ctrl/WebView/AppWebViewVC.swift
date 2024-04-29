@@ -12,22 +12,19 @@ import SVProgressHUD
 import HandyJSON
 
 class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
-
+    
     var urlStr: String = ""
     var isScree: Int?
     var type1: String?
     
     lazy var userCtrl:WKUserContentController = {
         let userCtrl = WKUserContentController()
-        
         userCtrl.add(self, name: "wavedFolder") // 风控
         userCtrl.add(self, name: "placeSheriff") //跳转原生或者H5
         userCtrl.add(self, name: "fortuneJudgment") //关闭
         userCtrl.add(self, name: "recentlyTogether") //回到 App 首页
-        
         userCtrl.add(self, name: "gradualChecked") //H5 页面里的拨打电话
         userCtrl.add(self, name: "livedPlaying")  //调用 App 应用评分
-        
         userCtrl.add(self, name: "Inwardly")
         userCtrl.add(self, name: "Fastidious")
         userCtrl.add(self, name: "Qualities")
@@ -35,12 +32,11 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
         userCtrl.add(self, name: "Storytelling")
         userCtrl.add(self, name: "Griswolds")
         userCtrl.add(self, name: "couldWatched")
-        
+        userCtrl.add(self, name: "jumpToEmail")
         return userCtrl;
     }()
     
     lazy var webView: WKWebView = {
-        
         let  preferences = WKPreferences()
         preferences.javaScriptEnabled = true
         let configuration = WKWebViewConfiguration()
@@ -64,7 +60,7 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.addBackBtnAction()
         
         self.isScree = 1;
@@ -73,62 +69,69 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
         
         addTitleLabelAction()
         
-        webView.load(URLRequest.init(url: URL.init(string: urlStr)!))
+        if urlStr.contains(" ") {
+            let urlString = urlStr
+            let sanitizedUrlString = urlString.replacingOccurrences(of: " ", with: "%20")
+            let url = URL(string: sanitizedUrlString)!
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                self.webView.load(URLRequest(url: url))
+            }
+        }
         print("web--url \(urlStr)")
     }
     
     override func backClick() {
-         
-         if (self.webView.canGoBack){
-             self.webView.goBack()
-             
-         }else{
-
-             if let navigationController = self.navigationController {
-                 let viewControllers = navigationController.viewControllers
-                 
-                 var classArr = [String]()
-                 for viewController in viewControllers {
-                     let className = String(describing: type(of: viewController))
-                     classArr.append(className)
-                 }
-                 
-                 if classArr.contains("AuthenticationVC") {
-                     if let index = classArr.firstIndex(of: "AuthenticationVC"), index > 0 {
-                         navigationController.popToViewController(viewControllers[index - 1], animated: true)
-                     }
-                 } else {
-                     if classArr.contains("E-walletBankCardVC") {
-                         if let index = classArr.firstIndex(of: "E-walletBankCardVC"), index > 0 {
-                             navigationController.popToViewController(viewControllers[index - 1], animated: true)
-                         }
-                     } else {
-                         let mon = UserDefaults.standard.object(forKey: "mongyeF")
-                         if mon as! String == "1" {
-                             navigationController.popToRootViewController(animated: true)
-                         }else {
-                             navigationController.popViewController(animated: true)
-                         }
-                     }
-                 }
-             }
-         }
+        
+        if (self.webView.canGoBack){
+            self.webView.goBack()
+            
+        }else{
+            
+            if let navigationController = self.navigationController {
+                let viewControllers = navigationController.viewControllers
+                
+                var classArr = [String]()
+                for viewController in viewControllers {
+                    let className = String(describing: type(of: viewController))
+                    classArr.append(className)
+                }
+                
+                if classArr.contains("AuthenticationVC") {
+                    if let index = classArr.firstIndex(of: "AuthenticationVC"), index > 0 {
+                        navigationController.popToViewController(viewControllers[index - 1], animated: true)
+                    }
+                } else {
+                    if classArr.contains("E-walletBankCardVC") {
+                        if let index = classArr.firstIndex(of: "E-walletBankCardVC"), index > 0 {
+                            navigationController.popToViewController(viewControllers[index - 1], animated: true)
+                        }
+                    } else {
+                        let mon = UserDefaults.standard.object(forKey: "mongyeF")
+                        if mon as! String == "1" {
+                            navigationController.popToRootViewController(animated: true)
+                        }else {
+                            navigationController.popViewController(animated: true)
+                        }
+                    }
+                }
+            }
+        }
     }
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
         let clickName = message.name;
         let obj = message.body
-
+        
         if (clickName == "wavedFolder" || clickName == "Inwardly"){ //风控埋点
             
             NSLog("风控");
-           
+            
             guard let urlArray = obj as? Array<String>, let productId = urlArray.first, let startTime = urlArray.last else {
                 return
             }
             let endTime:String = DeviceInfoManager.getCurrentMillis();
-
+            
             let postParams:[String:String] = [
                 "judicial": productId,   // 产品ID
                 "triangle": "10",  // 上报场景类型：1、注册 2、认证选择 3、证件信息 4、人脸照片 5、个人信息 6、工作信息 7、紧急联系人 8、银行卡信息9、开始申贷 10、结束申贷
@@ -142,19 +145,19 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
                 "morbidity": AppClassUtilsHelper.getRandomeStrAction(count: 10), // 混淆字段
             ]
             print("aaa  -- 上报 结束申贷 \(postParams)")
-
+            
             AppNetHelper.post_tongueMakingAction(params: postParams) { succ in
                 print("aaa  -- 上报 结束申贷 成功")
-
+                
             } fail: { fail in
                 print("aaa  -- 上报 结束申贷 失败")
-
+                
             }
             
             
         }else if (clickName == "placeSheriff" || clickName == "Fastidious"){//跳转 Scheme
             NSLog("跳转 Scheme控");
-
+            
             guard let urlArray = obj as? Array<String>, let rout = urlArray.first else {
                 return
             }
@@ -217,24 +220,24 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
                     
                 }else{
                     AppLaunchUtils.jumpNextVCAction(rootVC: self, route: rout);
-
+                    
                 }
                 
                 
             }else{
                 AppLaunchUtils.jumpNextVCAction(rootVC: self, route: rout);
-
+                
             }
             
-
             
-//            let publicParamsStr = AppAFNetManager.getPublicParamsAction();
-//            let urlStr = NSString(format: "%@?%@", rout, publicParamsStr) as String;
-//            let webVC = AppWebViewVC();
-//            webVC.urlStr = urlStr;
-//            self.navigationController?.pushViewController(webVC, animated: true);
             
-
+            //            let publicParamsStr = AppAFNetManager.getPublicParamsAction();
+            //            let urlStr = NSString(format: "%@?%@", rout, publicParamsStr) as String;
+            //            let webVC = AppWebViewVC();
+            //            webVC.urlStr = urlStr;
+            //            self.navigationController?.pushViewController(webVC, animated: true);
+            
+            
         }else if (clickName == "fortuneJudgment"){//关闭当前 H5
             self.navigationController?.popViewController(animated: true)
         }else if (clickName == "recentlyTogether"){
@@ -242,13 +245,13 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
             let appdelegate = UIApplication.shared.delegate as! AppDelegate
             self.navigationController?.popToRootViewController(animated: false)
             appdelegate.rootTabBarVC.selectedIndex = 0
-//            BaseTabBarController *tab = self.navigationController.parentViewController;
-//            [self.navigationController popToRootViewControllerAnimated:YES];
-//            tab.selectedIndex = 0;
-//            UINavigationController *homeNC = tab.childViewControllers.firstObject;
-//            HomeVC *homeVC = homeNC.childViewControllers.firstObject;
-//            [homeVC setHomeBtnSel:YES];
-//            [homeVC setMineBtnSel:NO];
+            //            BaseTabBarController *tab = self.navigationController.parentViewController;
+            //            [self.navigationController popToRootViewControllerAnimated:YES];
+            //            tab.selectedIndex = 0;
+            //            UINavigationController *homeNC = tab.childViewControllers.firstObject;
+            //            HomeVC *homeVC = homeNC.childViewControllers.firstObject;
+            //            [homeVC setHomeBtnSel:YES];
+            //            [homeVC setMineBtnSel:NO];
         }else if (clickName == "gradualChecked" || clickName == "Storytelling"){ //H5 页面里的拨打电话
             
             guard let strArray = obj as? Array<String>, let url = strArray.first else {
@@ -264,10 +267,33 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
         }else if (clickName == "couldWatched"){ //是否隐藏头部导航栏  isScree1是0否 如果参数是空走默认
             changeWebViewFrame(obj: obj)
         }else if (clickName == "jumpToEmail") {//邮箱跳转
-            
+            if let array = obj as? Array<Any>, let result = array.first {
+                let mobileStr = AppClassUtilsHelper.getDefaultStrWith(key: mobileUser)
+                let email = array.first as? String ?? ""
+                let subject = array[1]
+                let orderID = array.last as? String ?? ""
+                let strSubject = "?subject=\(subject)"
+                var strBody = "Ace Cash Account: \(mobileStr)"
+                if !orderID.isEmpty {
+                    strBody += ", orderId: \(orderID)"
+                }
+                let mailtoString = "mailto:\(email)?subject=\(subject)&body=\(strBody)"
+                if mailtoString.contains(" "){
+                    let sanitizedUrlString = mailtoString.replacingOccurrences(of: " ", with: "%20")
+                    if let mailtoUrl = URL(string: sanitizedUrlString) {
+                        if UIApplication.shared.canOpenURL(mailtoUrl) {
+                            UIApplication.shared.open(mailtoUrl, options: [:], completionHandler: nil)
+                        } else {
+                            print("Can't open email client")
+                        }
+                    } else {
+                        print("Invalid mailto URL")
+                    }
+                }
+            }
         }
     }
-
+    
     private func changeWebViewFrame(obj: Any) {
         if let array = obj as? Array<Any>, let result = array.first {
             self.isScree = result as? Int;
@@ -292,15 +318,15 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
         self.webView.setNeedsLayout()
     }
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destination.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
 
 extension AppWebViewVC: WKNavigationDelegate {
@@ -319,7 +345,7 @@ extension AppWebViewVC: WKNavigationDelegate {
             return
         }
         print("webview----- \(url)")
-
+        
         let urlabsoluteString = url.absoluteString
         if !urlabsoluteString.hasPrefix("http") {
             UIApplication.shared.open(url, options: [:]) { success in
@@ -329,24 +355,24 @@ extension AppWebViewVC: WKNavigationDelegate {
                     }
                 }
             }
-
+            
             if urlabsoluteString.contains("phonepe://pay") || urlabsoluteString.contains("paytmmp://pay") || urlabsoluteString.contains("gpay://upi/") {
                 decisionHandler(.cancel)
                 return
             }
         } else {
             if urlabsoluteString.contains(ApiPrefix) {
-//                if isScree == 0 { // 0 不隐藏
-//                    self.webView.scrollView.contentInset = UIEdgeInsets(top: kNavigationBarHeight, left: 0, bottom: 0, right: 0);
-//                } else { // 1 隐藏
-//                    self.webView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0);
-//                }
-//                if urlabsoluteString.contains(PPURL) || urlabsoluteString.contains(PPURL) {
-//                    self.webView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0);
-//                }
+                //                if isScree == 0 { // 0 不隐藏
+                //                    self.webView.scrollView.contentInset = UIEdgeInsets(top: kNavigationBarHeight, left: 0, bottom: 0, right: 0);
+                //                } else { // 1 隐藏
+                //                    self.webView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0);
+                //                }
+                //                if urlabsoluteString.contains(PPURL) || urlabsoluteString.contains(PPURL) {
+                //                    self.webView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0);
+                //                }
             } else {
                 self.webView.scrollView.contentInset = UIEdgeInsets(top: kNavigationBarHeight, left: 0, bottom: 0, right: 0);
-
+                
             }
             self.webView.layoutIfNeeded()
             self.webView.setNeedsLayout()
@@ -357,7 +383,7 @@ extension AppWebViewVC: WKNavigationDelegate {
             decisionHandler(.allow)
         }
     }
-
+    
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         SVProgressHUD.dismiss()
     }
