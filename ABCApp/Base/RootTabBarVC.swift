@@ -20,8 +20,9 @@ class RootTabBarVC: UITabBarController, UITabBarControllerDelegate
     }
     
     func setUpChildVC()  {
+        let paramsStr = AppAFNetManager.getPublicParamsAction()
         let webVc = SWEBController()
-        webVc.urlStr = ApiPrefix + "/feebleWaved"
+        webVc.urlStr = ApiPrefix + "/feebleWaved" + "?" + paramsStr
         webVc.type1 = "tab"
         self.setChileViewController(vc: HomeVC())
         self.setChileViewController(vc: MessageVC())

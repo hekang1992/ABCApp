@@ -68,13 +68,17 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
         view.insertSubview(webView, belowSubview: self.baseBackBtn)
         
         addTitleLabelAction()
-        
         if urlStr.contains(" ") {
             let urlString = urlStr
             let sanitizedUrlString = urlString.replacingOccurrences(of: " ", with: "%20")
             let url = URL(string: sanitizedUrlString)!
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                self.webView.load(URLRequest(url: url))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.webView.load(URLRequest(url: url))
+            }
+        }else {
+            let url = URL(string: urlStr)!
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.webView.load(URLRequest(url: url))
             }
         }
         print("web--url \(urlStr)")
@@ -270,7 +274,7 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
             if let array = obj as? Array<Any>, let result = array.first {
                 let mobileStr = AppClassUtilsHelper.getDefaultStrWith(key: mobileUser)
                 let email = array.first as? String ?? ""
-                let subject = array[1]
+                let subject = array[1] as? String ?? ""
                 let orderID = array.last as? String ?? ""
                 let strSubject = "?subject=\(subject)"
                 var strBody = "Ace Cash Account: \(mobileStr)"
@@ -281,6 +285,16 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
                 if mailtoString.contains(" "){
                     let sanitizedUrlString = mailtoString.replacingOccurrences(of: " ", with: "%20")
                     if let mailtoUrl = URL(string: sanitizedUrlString) {
+                        if UIApplication.shared.canOpenURL(mailtoUrl) {
+                            UIApplication.shared.open(mailtoUrl, options: [:], completionHandler: nil)
+                        } else {
+                            print("Can't open email client")
+                        }
+                    } else {
+                        print("Invalid mailto URL")
+                    }
+                }else {
+                    if let mailtoUrl = URL(string: mailtoString) {
                         if UIApplication.shared.canOpenURL(mailtoUrl) {
                             UIApplication.shared.open(mailtoUrl, options: [:], completionHandler: nil)
                         } else {
@@ -301,7 +315,7 @@ class AppWebViewVC: BaseMainVC, WKScriptMessageHandler {
                 print("111");
                 self.isScree = result as? Int
                 if self.type1 == "tab" {
-                    self.webView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - kNavigationBarHeight)
+                    self.webView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight - kNavigationBarHeight - 10.px())
                 }else {
                     self.webView.frame = CGRect(x: 0, y: 0, width: kScreenWidth, height: kScreenHeight)
                 }
@@ -333,19 +347,17 @@ extension AppWebViewVC: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         SVProgressHUD.show()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 40.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 50.0) {
             SVProgressHUD.dismiss()
         }
     }
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        
         guard let url = navigationAction.request.url else {
             decisionHandler(.allow)
             return
         }
         print("webview----- \(url)")
-        
         let urlabsoluteString = url.absoluteString
         if !urlabsoluteString.hasPrefix("http") {
             UIApplication.shared.open(url, options: [:]) { success in
@@ -355,7 +367,6 @@ extension AppWebViewVC: WKNavigationDelegate {
                     }
                 }
             }
-            
             if urlabsoluteString.contains("phonepe://pay") || urlabsoluteString.contains("paytmmp://pay") || urlabsoluteString.contains("gpay://upi/") {
                 decisionHandler(.cancel)
                 return

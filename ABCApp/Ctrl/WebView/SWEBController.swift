@@ -13,7 +13,7 @@ class SWEBController: AppWebViewVC {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.webView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight - kNavigationBarHeight)
+        self.webView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight - kNavigationBarHeight - 10.px())
         self.baseBackBtn.isHidden = true
         
         self.left3View.iconImg.image = UIImage.init(named: "icon_service_selected")

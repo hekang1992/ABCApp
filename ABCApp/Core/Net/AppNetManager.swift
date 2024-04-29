@@ -212,10 +212,9 @@ class AppAFNetManager: NSObject {
             "ablative":DeviceInfoManager.getSystemVersion(),      // 设备os版本
             "prevent":"acsh",
             "fibbing":  DeviceInfoManager.getIdfvAction(),           // 取idfv
-            "change":AppClassUtilsHelper.getRandomeStrAction(count: 20),            // 混淆字段
+            "change":AppClassUtilsHelper.getRandomeStrAction(count: 20),
+            "phonecode" : AppClassUtilsHelper.getDefaultStrWith(key: mobileUser)
         ]
-
-        
         
         let sessionStr = AppClassUtilsHelper.getDefaultStrWith(key: sessionUser)
         
